@@ -91,8 +91,8 @@ class MicroServiceModelUtilsTest extends PHPUnit_Framework_TestCase
 
         // Test the time stamps.
         $now = new DateTime;
-        $this->assertEquals($now->format(DateTime::ISO8601),$model->getCreatedAtAttribute($now->format($this->dateFormat)));
-        $this->assertEquals($now->format(DateTime::ISO8601),$model->getUpdatedAtAttribute($now->format($this->dateFormat)));
+        $this->assertEquals($now->format(DateTime::ISO8601), $model->getCreatedAtAttribute($now->format($this->dateFormat)));
+        $this->assertEquals($now->format(DateTime::ISO8601), $model->getUpdatedAtAttribute($now->format($this->dateFormat)));
     }
 }
 
