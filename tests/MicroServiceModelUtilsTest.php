@@ -33,6 +33,13 @@ class MicroServiceModelUtilsTest extends PHPUnit_Framework_TestCase
     protected $expectedModelCacheKeys = ['examples:index'];
 
     /**
+     * Date format for testing.
+     *
+     * @var string
+     */
+    protected $dateFormat = 'Y-m-d H:i:s';
+
+    /**
      * Test the base model functionality.
      *
      * @return void
@@ -70,12 +77,32 @@ class MicroServiceModelUtilsTest extends PHPUnit_Framework_TestCase
         $model->setAttributeCacheKeys($this->expectedAttributeCacheKeys);
         $this->assertEquals($this->expectedModelCacheKeys, $exampleThing->getModelCacheKeys($model));
     }
+
+    /**
+     * Test the ISO8601 Date handling trait.
+     *
+     * @return void
+     */
+    public function testISO8601DatesTrait()
+    {
+        // Create a new model instance.
+        $model = new Example;
+        $model->setDateFormat($this->dateFormat);
+
+        // Test the time stamps.
+        $now = new DateTime;
+        $this->assertEquals($now->format(DateTime::ISO8601),$model->getCreatedAtAttribute($now->format($this->dateFormat)));
+        $this->assertEquals($now->format(DateTime::ISO8601),$model->getUpdatedAtAttribute($now->format($this->dateFormat)));
+    }
 }
 
 /**
  * Example model class.
  */
-class Example extends MicroServiceBaseModel {}
+class Example extends MicroServiceBaseModel
+{
+    use \LushDigital\MicroServiceModelUtils\Traits\MicroServiceISO8601DatesTrait;
+}
 
 /**
  * An example class to test the cache handling trait.
