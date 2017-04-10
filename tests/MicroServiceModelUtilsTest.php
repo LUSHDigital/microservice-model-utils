@@ -77,12 +77,6 @@ class MicroServiceModelUtilsTest extends PHPUnit_Framework_TestCase
         $this->expectedModelCacheKeys[] = 'examples:name:';
         $model->setAttributeCacheKeys($this->expectedAttributeCacheKeys);
         $this->assertEquals($this->expectedModelCacheKeys, $exampleThing->getModelCacheKeys($model));
-
-        // Attempt to perform cache operations on a non-cacheable model.
-        $anotherModel = new InvalidModel;
-        $exampleThing = new AnotherExample;
-        $this->assertEquals(false, $exampleThing->getModelCacheKeys($anotherModel));
-        $this->assertEquals(false, $exampleThing->cacheForget($anotherModel));
     }
 
     /**
@@ -110,11 +104,6 @@ class Example extends MicroServiceBaseModel
 {
     use \LushDigital\MicroServiceModelUtils\Traits\MicroServiceISO8601DatesTrait;
 }
-
-/**
- * Example non-cacheable model class.
- */
-class InvalidModel extends Model {}
 
 /**
  * An example class to test the cache handling trait.

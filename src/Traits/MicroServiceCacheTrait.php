@@ -20,16 +20,11 @@ trait MicroServiceCacheTrait
     /**
      * Get an array of possible cache keys for the given model.
      *
-     * @param Model $model
+     * @param Cacheable $model
      * @return array|bool
      */
-    public function getModelCacheKeys(Model $model)
+    public function getModelCacheKeys(Cacheable $model)
     {
-        // If this model is not cacheable bail out.
-        if (!($model instanceof Cacheable)) {
-            return false;
-        }
-
         // Build list of cache keys we need to clear.
         $cacheKeys = [
             implode(':', [$model->getTable(), 'index']),
@@ -51,16 +46,11 @@ trait MicroServiceCacheTrait
     /**
      * Attempt to forget items from the cache for a given model.
      *
-     * @param Model $model
+     * @param Cacheable $model
      * @return bool
      */
-    public function cacheForget(Model $model)
+    public function cacheForget(Cacheable $model)
     {
-        // If this model is not cacheable bail out.
-        if (!($model instanceof Cacheable)) {
-            return false;
-        }
-
         // Clear the cache for each key.
         foreach ($this->getModelCacheKeys($model) as $cacheKey) {
             Cache::forget($cacheKey);
