@@ -8,7 +8,7 @@ namespace LushDigital\MicroServiceModelUtils\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
-use LushDigital\MicroServiceModelUtils\Models\MicroServiceBaseModel;
+use LushDigital\MicroServiceModelUtils\Contracts\Cacheable;
 
 /**
  * A trait for handling caching in a microservice.
@@ -25,8 +25,8 @@ trait MicroServiceCacheTrait
      */
     public function getModelCacheKeys(Model $model)
     {
-        // If this is not a microservice model, bail out.
-        if (!($model instanceof MicroServiceBaseModel)) {
+        // If this model is not cacheable bail out.
+        if (!($model instanceof Cacheable)) {
             return false;
         }
 
@@ -56,8 +56,8 @@ trait MicroServiceCacheTrait
      */
     public function cacheForget(Model $model)
     {
-        // If this is not a microservice model, bail out.
-        if (!($model instanceof MicroServiceBaseModel)) {
+        // If this model is not cacheable bail out.
+        if (!($model instanceof Cacheable)) {
             return false;
         }
 

@@ -7,13 +7,14 @@
 namespace LushDigital\MicroServiceModelUtils\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use LushDigital\MicroServiceModelUtils\Contracts\Cacheable;
 
 /**
  * A base model class that can be used in a microservice.
  *
  * @package LushDigital\MicroServiceModelUtils\Models
  */
-abstract class MicroServiceBaseModel extends Model
+abstract class MicroServiceBaseModel extends Model implements Cacheable
 {
     /**
      * A list of the model attributes that can be used as cache keys.
