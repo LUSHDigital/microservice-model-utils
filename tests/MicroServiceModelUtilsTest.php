@@ -27,11 +27,28 @@ class MicroServiceModelUtilsTest extends PHPUnit_Framework_TestCase
     protected $expectedAttributeCacheKeys = [];
 
     /**
+     * Expected attribute cache keys for the primary key model.
+     *
+     * @var array
+     */
+    protected $expectedPrimaryKeyAttributeCacheKeys = [];
+
+    /**
      * Expected model cache keys.
      *
      * @var array
      */
     protected $expectedModelCacheKeys = ['examples:index'];
+
+    /**
+     * Expected model cache keys for the primary key model.
+     *
+     * @var array
+     */
+    protected $expectedPrimaryKeyModelCacheKeys = [
+        'primary_key_examples:index',
+        'primary_key_examples:1'
+    ];
 
     /**
      * Date format for testing.
@@ -58,6 +75,15 @@ class MicroServiceModelUtilsTest extends PHPUnit_Framework_TestCase
         $this->expectedAttributeCacheKeys = ['name'];
         $model->setAttributeCacheKeys($this->expectedAttributeCacheKeys);
         $this->assertEquals($this->expectedAttributeCacheKeys, $model->getAttributeCacheKeys());
+
+        // Test the cache keys with a primary key.
+        $primaryKeyModel = new PrimaryKeyExample();
+        $this->assertEquals($this->expectedPrimaryKeyAttributeCacheKeys, $primaryKeyModel->getAttributeCacheKeys());
+
+        // Alter the cache keys and test again.
+        $this->expectedPrimaryKeyAttributeCacheKeys = ['name'];
+        $primaryKeyModel->setAttributeCacheKeys($this->expectedPrimaryKeyAttributeCacheKeys);
+        $this->assertEquals($this->expectedPrimaryKeyAttributeCacheKeys, $primaryKeyModel->getAttributeCacheKeys());
     }
 
     /**
@@ -77,6 +103,17 @@ class MicroServiceModelUtilsTest extends PHPUnit_Framework_TestCase
         $this->expectedModelCacheKeys[] = 'examples:name:';
         $model->setAttributeCacheKeys($this->expectedAttributeCacheKeys);
         $this->assertEquals($this->expectedModelCacheKeys, $exampleThing->getModelCacheKeys($model));
+
+        // Test the model cache keys with a primary key.
+        $primaryKeyModel = new PrimaryKeyExample();
+        $exampleThing = new AnotherExample;
+        $this->assertEquals($this->expectedPrimaryKeyModelCacheKeys, $exampleThing->getModelCacheKeys($primaryKeyModel));
+
+        // Alter the cache keys and test again.
+        $this->expectedPrimaryKeyAttributeCacheKeys = ['name'];
+        $this->expectedPrimaryKeyModelCacheKeys[] = 'primary_key_examples:name:';
+        $primaryKeyModel->setAttributeCacheKeys($this->expectedAttributeCacheKeys);
+        $this->assertEquals($this->expectedPrimaryKeyModelCacheKeys, $exampleThing->getModelCacheKeys($primaryKeyModel));
     }
 
     /**
@@ -103,6 +140,18 @@ class MicroServiceModelUtilsTest extends PHPUnit_Framework_TestCase
 class Example extends MicroServiceBaseModel
 {
     use \LushDigital\MicroServiceModelUtils\Traits\MicroServiceISO8601DatesTrait;
+}
+
+/**
+ * Example model class with a primary key value.
+ */
+class PrimaryKeyExample extends MicroServiceBaseModel
+{
+    use \LushDigital\MicroServiceModelUtils\Traits\MicroServiceISO8601DatesTrait;
+
+    protected $attributes = [
+        'id' => 1,
+    ];
 }
 
 /**

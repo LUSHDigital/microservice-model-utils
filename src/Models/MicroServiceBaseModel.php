@@ -57,4 +57,14 @@ abstract class MicroServiceBaseModel extends Model implements Cacheable
     {
         return ((new static)->getTable());
     }
+
+    /**
+     * Get the value of the primary key, used to identify this model.
+     *
+     * @return mixed
+     */
+    public function getPrimaryKeyValue()
+    {
+        return $this->id;
+    }
 }

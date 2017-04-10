@@ -30,9 +30,9 @@ trait MicroServiceCacheTrait
             implode(':', [$model->getTable(), 'index']),
         ];
 
-        // If the model has an id field add the cache key.
-        if (!empty($model->id)) {
-            $cacheKeys[] = implode(':', [$model->getTable(), $model->id]);
+        // If the model has an primary key add the cache key.
+        if (!empty($model->getPrimaryKeyValue())) {
+            $cacheKeys[] = implode(':', [$model->getTable(), $model->getPrimaryKeyValue()]);
         }
 
         // Add a cache key for each attribute marked as a cache key.

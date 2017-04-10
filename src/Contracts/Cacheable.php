@@ -26,4 +26,11 @@ interface Cacheable
      * @return array
      */
     public function getAttributeCacheKeys();
+
+    /**
+     * Get the value of the primary key, used to identify this model.
+     *
+     * @return mixed
+     */
+    public function getPrimaryKeyValue();
 }
