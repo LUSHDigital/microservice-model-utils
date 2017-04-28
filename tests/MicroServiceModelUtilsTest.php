@@ -99,19 +99,21 @@ class MicroServiceModelUtilsTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($this->expectedModelCacheKeys, $exampleThing->getModelCacheKeys($model));
 
         // Alter the cache keys and test again.
+        $model->name = 'test';
         $this->expectedAttributeCacheKeys = ['name'];
-        $this->expectedModelCacheKeys[] = 'examples:name:';
+        $this->expectedModelCacheKeys[] = 'examples:name:test';
         $model->setAttributeCacheKeys($this->expectedAttributeCacheKeys);
         $this->assertEquals($this->expectedModelCacheKeys, $exampleThing->getModelCacheKeys($model));
 
         // Test the model cache keys with a primary key.
-        $primaryKeyModel = new PrimaryKeyExample();
+        $primaryKeyModel = new PrimaryKeyExample;
+        $primaryKeyModel->name = 'testing';
         $exampleThing = new AnotherExample;
         $this->assertEquals($this->expectedPrimaryKeyModelCacheKeys, $exampleThing->getModelCacheKeys($primaryKeyModel));
 
         // Alter the cache keys and test again.
         $this->expectedPrimaryKeyAttributeCacheKeys = ['name'];
-        $this->expectedPrimaryKeyModelCacheKeys[] = 'primary_key_examples:name:';
+        $this->expectedPrimaryKeyModelCacheKeys[] = 'primary_key_examples:name:testing';
         $primaryKeyModel->setAttributeCacheKeys($this->expectedAttributeCacheKeys);
         $this->assertEquals($this->expectedPrimaryKeyModelCacheKeys, $exampleThing->getModelCacheKeys($primaryKeyModel));
     }

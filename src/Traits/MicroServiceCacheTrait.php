@@ -35,10 +35,8 @@ trait MicroServiceCacheTrait
             $cacheKeys[] = implode(':', [$model->getTable(), $model->getPrimaryKeyValue()]);
         }
 
-        // Add a cache key for each attribute marked as a cache key.
-        foreach ($model->getAttributeCacheKeys() as $attributeCacheKey) {
-            $cacheKeys[] = implode(':', [$model->getTable(), $attributeCacheKey, $model->{$attributeCacheKey}]);
-        }
+        // Add the cache keys for the model attributes.
+        $this->addAttributeCacheKeys($cacheKeys, $model);
 
         return $cacheKeys;
     }
@@ -57,5 +55,44 @@ trait MicroServiceCacheTrait
         }
 
         return true;
+    }
+
+    /**
+     * Add cache keys for each attribute of a given model.
+     *
+     * @param array $cacheKeys
+     * @param Cacheable $model
+     */
+    protected function addAttributeCacheKeys(array &$cacheKeys, Cacheable $model)
+    {
+        // Add a cache key for each attribute marked as a cache key.
+        foreach ($model->getAttributeCacheKeys() as $attributeCacheKey) {
+            $attributeValue = $model->{$attributeCacheKey};
+
+            // If the attribute is a collection check each item value.
+            if ($attributeValue instanceof Collection) {
+                $this->getCollectionAttributeCacheKeys($cacheKeys, $model, $attributeCacheKey, $attributeValue);
+            } elseif (is_scalar($attributeValue)) {
+                // Otherwise just get the value.
+                $cacheKeys[] = implode(':', [$model->getTable(), $attributeCacheKey, $attributeValue]);
+            }
+        }
+    }
+
+    /**
+     * Get the attribute cache keys from a collection attribute.
+     *
+     * @param array $cacheKeys
+     * @param Cacheable $model
+     * @param $attribute
+     * @param $collection
+     */
+    protected function getCollectionAttributeCacheKeys(array &$cacheKeys, Cacheable $model, $attribute, $collection)
+    {
+        foreach ($collection as $item) {
+            if (isset($item->id)) {
+                $cacheKeys[] = implode(':', [$model->getTable(), $attribute, $item->id]);
+            }
+        }
     }
 }
