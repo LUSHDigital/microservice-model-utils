@@ -6,6 +6,7 @@
 
 namespace LushDigital\MicroServiceModelUtils\Traits;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use LushDigital\MicroServiceModelUtils\Contracts\Cacheable;
@@ -107,6 +108,11 @@ trait MicroServiceCacheTrait
      */
     protected function getOriginalCacheKeyValue(Cacheable $model, $attributeCacheKey)
     {
+        // Bail out if the model is not an eloquent model.
+        if (!$model instanceof Model) {
+            return null;
+        }
+
         return empty($model->getOriginal($attributeCacheKey)) ? null : $model->getOriginal($attributeCacheKey);
     }
 }
