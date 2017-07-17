@@ -67,7 +67,9 @@ trait MicroServiceCacheTrait
     {
         // Add a cache key for each attribute marked as a cache key.
         foreach ($model->getAttributeCacheKeys() as $attributeCacheKey) {
-            $attributeValue = $model->{$attributeCacheKey};
+            $origAttributeValue = $this->getOriginalCacheKeyValue($model, $attributeCacheKey);
+
+            $attributeValue = ($origAttributeValue == null) ? $model->{$attributeCacheKey} : $origAttributeValue;
 
             // If the attribute is a collection check each item value.
             if ($attributeValue instanceof Collection) {
@@ -94,5 +96,17 @@ trait MicroServiceCacheTrait
                 $cacheKeys[] = implode(':', [$model->getTable(), $attribute, $item->id]);
             }
         }
+    }
+
+    /**
+     * Get original cache key value.
+     *
+     * @param Cacheable $model
+     * @param $attributeCacheKey
+     * @return mixed|null
+     */
+    protected function getOriginalCacheKeyValue(Cacheable $model, $attributeCacheKey)
+    {
+        return empty($model->getOriginal($attributeCacheKey)) ? null : $model->getOriginal($attributeCacheKey);
     }
 }
