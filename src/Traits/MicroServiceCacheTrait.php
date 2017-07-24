@@ -70,14 +70,24 @@ trait MicroServiceCacheTrait
         foreach ($model->getAttributeCacheKeys() as $attributeCacheKey) {
             $origAttributeValue = $this->getOriginalCacheKeyValue($model, $attributeCacheKey);
 
-            $attributeValue = ($origAttributeValue == null) ? $model->{$attributeCacheKey} : $origAttributeValue;
+            $attributesValues = [];
 
-            // If the attribute is a collection check each item value.
-            if ($attributeValue instanceof Collection) {
-                $this->getCollectionAttributeCacheKeys($cacheKeys, $model, $attributeCacheKey, $attributeValue);
-            } elseif (is_scalar($attributeValue)) {
-                // Otherwise just get the value.
-                $cacheKeys[] = implode(':', [$model->getTable(), $attributeCacheKey, $attributeValue]);
+            if($origAttributeValue != null)
+            {
+                array_push($attributesValues, $origAttributeValue);
+            }
+
+            array_push($attributesValues, $model->{$attributeCacheKey});
+
+            foreach ($attributesValues as $attributeValue)
+            {
+                // If the attribute is a collection check each item value.
+                if ($attributeValue instanceof Collection) {
+                    $this->getCollectionAttributeCacheKeys($cacheKeys, $model, $attributeCacheKey, $attributeValue);
+                } elseif (is_scalar($attributeValue)) {
+                    // Otherwise just get the value.
+                    $cacheKeys[] = implode(':', [$model->getTable(), $attributeCacheKey, $attributeValue]);
+                }
             }
         }
     }
