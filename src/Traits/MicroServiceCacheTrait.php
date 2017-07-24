@@ -71,16 +71,13 @@ trait MicroServiceCacheTrait
             $origAttributeValue = $this->getOriginalCacheKeyValue($model, $attributeCacheKey);
 
             $attributesValues = [];
-
-            if($origAttributeValue != null)
-            {
+            if ($origAttributeValue != null) {
                 array_push($attributesValues, $origAttributeValue);
             }
 
             array_push($attributesValues, $model->{$attributeCacheKey});
 
-            foreach ($attributesValues as $attributeValue)
-            {
+            foreach ($attributesValues as $attributeValue) {
                 // If the attribute is a collection check each item value.
                 if ($attributeValue instanceof Collection) {
                     $this->getCollectionAttributeCacheKeys($cacheKeys, $model, $attributeCacheKey, $attributeValue);
